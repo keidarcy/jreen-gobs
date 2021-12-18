@@ -1,0 +1,23 @@
+{
+  "name": "@joobs/joobs-function",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "build": "tsc",
+    "dev": "node esbuild.config.js",
+    "clean": "rm -rf dist"
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "license": "MIT",
+  "keywords": [],
+  "author": "",
+  "dependencies": {
+    "@joobs/joobs-data": "^1.0.0",
+    "axios": "^0.24.0",
+    "lodash": "^4.17.21"
+  }
+}
