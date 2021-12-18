@@ -9,6 +9,7 @@
     "dev": "run-p dev:*",
     "dev:cjs": "tsc -w",
     "dev:esm": "tsc -w -p tsconfig.cjs.json",
+    "test": "NODE_ENV=unittest jest",
     "clean": "rm -rf dist"
   },
   "main": "dist/cjs/index.js",
@@ -22,5 +23,16 @@
   "author": "",
   "dependencies": {
     "lodash": "^4.17.21"
+  },
+  "jest": {
+    "preset": "ts-jest",
+    "automock": false,
+    "testMatch": [
+      "**/__tests__/**/*.ts?(x)",
+      "**/?(*.)+(spec|test).ts?(x)"
+    ],
+    "setupFiles": [
+      "../../setupJest.ts"
+    ]
   }
 }
