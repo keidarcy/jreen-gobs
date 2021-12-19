@@ -13,10 +13,6 @@ export const useFetchJobs = ({ jobs, setJobs, paging }: FetchedJobsType) => {
   const [error, setError] = useState<PostgrestError | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   useEffect(() => {
-    console.log({
-      start: paging * SHOW_NUMBER,
-      end: (paging + 1) * SHOW_NUMBER,
-    });
     const selectColumns = SelectColumns.join(',');
     const fn = async () => {
       setLoading(true);
