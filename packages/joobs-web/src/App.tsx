@@ -1,47 +1,55 @@
 import { useState } from 'react';
-import logo from './logo.svg';
-import './App.css';
-import { add, addMore } from '@joobs/joobs-data';
+import { Container, Stack, Text, useColorModeValue } from '@chakra-ui/react';
+import ContentTable from './components/ContentTable';
+import NavBar from './components/NavBar';
+import SearchBar from './components/SearchBar';
+import { useFetchJobs } from './hooks/useFetchJobs';
+import { SupaJob } from './utils/helper';
+import useInView from 'react-cool-inview';
 
-function App() {
-  const [count, setCount] = useState(0);
+export default function App() {
+  const [jobs, setJobs] = useState<SupaJob[]>([]);
+  const [query, setQuery] = useState<string>('');
+  const [paging, setPaging] = useState<number>(0);
+  const { error, loading } = useFetchJobs({ jobs, setJobs, paging });
+  const color = useColorModeValue('red.500', 'white');
+
+  const { observe } = useInView({
+    threshold: 0.25, // Default is 0
+    onChange: ({ observe, unobserve }) => {
+      requestIdleCallback(() => {
+        unobserve();
+        observe();
+      });
+    },
+    onEnter: () => {
+      setPaging((prevPaging) => prevPaging + 1);
+    },
+  });
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>Hello Vite + React + Monorepo</p>
-        <p>
-          <button type="button" onClick={() => setCount((count) => count + 1)}>
-            count is: {count * add(1, 2)}
-            {addMore()}
-          </button>
-        </p>
-        <p>
-          Edit <code>App.tsx</code> and save to test HMR updates.
-        </p>
-        <p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            MONOREPO
-          </a>
-          {' | '}
-          <a
-            className="App-link"
-            href="https://vitejs.dev/guide/features.html"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Vite Docs
-          </a>
-        </p>
-      </header>
-    </div>
+    <Stack as="main" align="center" mb={'20'}>
+      <Container maxW="1500px" centerContent>
+        <NavBar />
+        <SearchBar query={query} setQuery={setQuery} />
+        <ContentTable
+          observe={observe}
+          jobs={jobs}
+          setJobs={setJobs}
+          query={query}
+          paging={paging}
+        />
+        {error && (
+          <Text color={color} my={4}>
+            Error
+          </Text>
+        )}
+        {loading && (
+          <Text color={color} my={4}>
+            Loading
+          </Text>
+        )}
+      </Container>
+    </Stack>
   );
 }
-
-export default App;

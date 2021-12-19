@@ -1,2 +1,2 @@
 export { default as add } from './add';
-export { default as addMore } from './addMore';
+export { default as DB } from './db';
