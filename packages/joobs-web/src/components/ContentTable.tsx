@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Table, Thead, Tbody, Tr, Th, Td, TableCaption, Button, Box } from '@chakra-ui/react';
+import { Table, Thead, Tbody, Tr, Th, Td, TableCaption, Button, Box, Flex } from '@chakra-ui/react';
 import {
   handleDate,
   handleDescription,
@@ -10,7 +10,7 @@ import {
   getSearchedRows,
   SHOW_NUMBER,
 } from '../utils/helper';
-import { ChevronDownIcon, ChevronUpIcon } from '@chakra-ui/icons';
+import { ChevronDownIcon, ChevronUpIcon, StarIcon } from '@chakra-ui/icons';
 
 type HeaderValueMapping = {
   key: SelectColumnsType;
@@ -86,42 +86,51 @@ const ContentTable: React.FC<ContentTableProps> = ({ jobs, query, setJobs, obser
   };
 
   return (
-    <Table variant="striped" width={'fit-content'} overflow={'auto'}>
-      <TableCaption>A site to search IT jobs easily!</TableCaption>
-      <Thead>
-        <Tr>
-          {headerValueMapping.map((header) => (
-            <Th onClick={() => onSort(header.key)} key={header.title}>
-              <Button
-                leftIcon={sortFieldDirections[header.key] ? <ChevronDownIcon /> : <ChevronUpIcon />}
-                colorScheme="teal"
-                variant="ghost"
-                size="sm"
-              >
-                {header.title}
-              </Button>
-            </Th>
-          ))}
-        </Tr>
-      </Thead>
-      <Tbody>
-        {getSearchedRows(jobs, query).map((job, jobIndex) => {
-          return (paging + 1) * SHOW_NUMBER - 2 === jobIndex ? (
-            <Tr ref={observe} key={job?.id}>
-              {headerValueMapping.map((headerValue) => (
-                <Td key={headerValue.title}>{headerValue.value(job)}</Td>
-              ))}
-            </Tr>
-          ) : (
-            <Tr key={job?.id}>
-              {headerValueMapping.map((headerValue) => (
-                <Td key={headerValue.title}>{headerValue.value(job)}</Td>
-              ))}
-            </Tr>
-          );
-        })}
-      </Tbody>
-    </Table>
+    <>
+      <Flex mt={'5'} justifyContent={'end'} width={'full'}>
+        <Button leftIcon={<StarIcon />} colorScheme="pink" variant="outline">
+          Total: {jobs.length}
+        </Button>
+      </Flex>
+      <Table variant="striped" width={'fit-content'} overflow={'auto'}>
+        <TableCaption>A site to search IT jobs easily!</TableCaption>
+        <Thead>
+          <Tr>
+            {headerValueMapping.map((header) => (
+              <Th onClick={() => onSort(header.key)} key={header.title}>
+                <Button
+                  leftIcon={
+                    sortFieldDirections[header.key] ? <ChevronDownIcon /> : <ChevronUpIcon />
+                  }
+                  colorScheme="teal"
+                  variant="ghost"
+                  size="sm"
+                >
+                  {header.title}
+                </Button>
+              </Th>
+            ))}
+          </Tr>
+        </Thead>
+        <Tbody>
+          {getSearchedRows(jobs, query).map((job, jobIndex) => {
+            return (paging + 1) * SHOW_NUMBER - 2 === jobIndex ? (
+              <Tr ref={observe} key={job?.id}>
+                {headerValueMapping.map((headerValue) => (
+                  <Td key={headerValue.title}>{headerValue.value(job)}</Td>
+                ))}
+              </Tr>
+            ) : (
+              <Tr key={job?.id}>
+                {headerValueMapping.map((headerValue) => (
+                  <Td key={headerValue.title}>{headerValue.value(job)}</Td>
+                ))}
+              </Tr>
+            );
+          })}
+        </Tbody>
+      </Table>
+    </>
   );
 };
 
